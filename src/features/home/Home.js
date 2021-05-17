@@ -12,10 +12,14 @@ export default function Home() {
         marginTop: '50px',
         marginBottom: '50px',
     };
+    const homepage = {
+        innerHeight: '100vh',
+        // paddingBottom: '100px'
+    };
     const {Title, Paragraph} = Typography;
     const { Meta } = Card;
     return (
-        <div>
+        <div style={homepage}>
                 {/* <h1>This is the home page</h1> */}
                 {/* <DatePicker/> */}
                 <Hero/>
@@ -67,7 +71,7 @@ export default function Home() {
                         ad minim veniam, quis nostrud exercitation ullamco laboris 
                         nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor 
                         in reprehenderit in voluptate</Paragraph>
-                        <Button type="primary">Learn more</Button>
+                        <Button type="primary" style={{ background: "black", borderColor: "black" }}>Learn more</Button>
                     </Space>
                     </Col>
                     <Col span={16} pull={10}
@@ -79,6 +83,8 @@ export default function Home() {
                         />
                     </Col>
                 </Row>
+
+                <div style={{ background: "#2d3436", height: "30vh", paddingTop: "100px" }}></div>
         </div>
     )
 }
