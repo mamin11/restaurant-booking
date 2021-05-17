@@ -79,6 +79,7 @@ export default function Home() {
                     <Image
                         alt="Restaurant Image"
                         width={400}
+                        preview={false}
                         src="/imgs/r-1.jpg"
                         />
                     </Col>

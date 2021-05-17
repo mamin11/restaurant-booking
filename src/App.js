@@ -6,6 +6,7 @@ import {BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Menus from './features/menu/Menus';
 import About from './features/about/About';
 import Booking from './features/booking/Booking';
+import MenuItem from './features/menu/MenuItem';
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
 
         <Switch>
             <Route exact path="/"><Home/></Route>
-            <Route path="/menu"><Menus/></Route>
+            <Route exact path="/menu"><Menus/></Route>
+            <Route exact path="/menu/:id"><MenuItem/></Route>
             <Route path="/booking"><Booking/></Route>
             <Route path="/about"><About/></Route>
         </Switch>

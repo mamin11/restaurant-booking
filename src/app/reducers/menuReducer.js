@@ -1,18 +1,16 @@
 import { ActionTypes } from "../constants/action-types";
 
 const initialState = {
-    menus: [{
-        id:1,
-        title: 'Mega Fillet Burger',
-        category: 'Lunch',
-        price: '3.49',
-    }]
+    menus: [],
+    menuItem: []
 }
 
 export const menuReducer = (state = initialState, {type, payload}) => {
     switch (type) {
         case ActionTypes.SET_MENUS:
-            return state;
+            return {...state, menus: payload};
+        case ActionTypes.SELECTED_MENU:
+            return {...state, menuItem: payload}
         default:
             return state;
     }
