@@ -13,3 +13,9 @@ export const selectedMenu = (menu) => {
         payload: menu,
     }
 }
+
+export const removeSelectedMenu = () => {
+    return {
+        type: ActionTypes.REMOVE_SELECTED_MENU,
+    }
+}

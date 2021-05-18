@@ -11,6 +11,8 @@ export const menuReducer = (state = initialState, {type, payload}) => {
             return {...state, menus: payload};
         case ActionTypes.SELECTED_MENU:
             return {...state, menuItem: payload}
+        case ActionTypes.REMOVE_SELECTED_MENU:
+            return {}
         default:
             return state;
     }

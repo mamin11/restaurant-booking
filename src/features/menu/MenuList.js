@@ -1,18 +1,19 @@
 import axios from 'axios'
 import React, {useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
-import {Link} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 import {setMenus} from '../../app/actions/menuActions'
 import { Row, Col, Card } from 'antd';
 const {Meta} = Card
 
 const MenuList = () => {
+    const {category} = useParams()
     const menus = useSelector(state => state.menus.menus)
     const dispatch = useDispatch()
     
     const fetchMenus = async () => {
         const response = await axios
-        .get('https://fakestoreapi.com/products')
+        .get(`http://127.0.0.1:8000/api/menus/category/${category}`)
         .catch((err) => {
             console.log(err)
         })
@@ -21,7 +22,7 @@ const MenuList = () => {
 
     useEffect(() => {
         fetchMenus()
-    }, [])
+    }, [category])
 
     console.log(menus)
 
@@ -35,10 +36,10 @@ const MenuList = () => {
             <Col className="gutter-row" span={6} key={menu.id}>
                 <Link to={`/menu/${menu.id}`}>
                     <Card
-                            // loading={true}
+                            loading={Object.keys(menus).length === 0 ? true : false}
                             hoverable
                             style={{ width: 300, margin: '20px' }}
-                            cover={<img alt="example" src={"/imgs/m1.jpg"} />}
+                            cover={<img alt="example" src={menu.image} />}
                         >
                             <Meta title={menu.title}
                             // description={menu.description}

@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, {useEffect} from 'react'
 import {useParams} from 'react-router-dom'
 import {useSelector, useDispatch} from 'react-redux'
-import {selectedMenu} from '../../app/actions/menuActions'
+import {selectedMenu, removeSelectedMenu} from '../../app/actions/menuActions'
 import { Row, Col, Layout, Image, Typography, Space, } from 'antd'
 
 const {Title, Paragraph} = Typography
@@ -15,7 +15,7 @@ const MenuItem = () => {
     
     const fetchMenuItem = async () => {
         const response = await axios
-        .get(`https://fakestoreapi.com/products/${id}`)
+        .get(`http://127.0.0.1:8000/api/menus/${id}`)
         .catch((err) => {
             console.log(err)
         })
@@ -23,10 +23,14 @@ const MenuItem = () => {
     }
 
     useEffect(() => {
+        // if(id && id !== "") {}
         fetchMenuItem()
-    }, [])
+        // return () => {
+        //     dispatch(removeSelectedMenu());
+        // };
+    }, [id])
 
-    console.log(menuItem)
+    console.log('selected item: ', menuItem)
 
     const row = {
         margin: '50px',
@@ -41,7 +45,7 @@ const MenuItem = () => {
                             <Image
                                 width={'100%'}
                                 preview={false}
-                                src={"/imgs/m1.jpg"}
+                                src={menuItem.image}
                             />
                         </Col>
 

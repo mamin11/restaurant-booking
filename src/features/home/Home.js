@@ -2,6 +2,7 @@ import React from 'react'
 import 'antd/dist/antd.css';
 import { Row, Col, Image, Typography, Space, Button, Card } from 'antd'
 import Hero from './Hero'
+import {Link } from 'react-router-dom'
 
 export default function Home() {
     const row = {
@@ -26,33 +27,43 @@ export default function Home() {
 
                 <Title style={title}>Food For You</Title>
                 <Row style={row}>
+                    
                     <Col span={6} push={4}>
-                    <Card
-                        hoverable
-                        style={{ width: 240 }}
-                        cover={<img alt="example" src="/imgs/m1.jpg" />}
-                    >
-                        <Meta title="Breakfast"  />
-                    </Card>
+                        <Link to="/menus/Breakfast" >
+                            <Card
+                                hoverable
+                                style={{ width: 240 }}
+                                cover={<img alt="example" src="/imgs/m1.jpg" />}
+                            >
+                                <Meta title="Breakfast"  />
+                            </Card>
+                        </Link>
                     </Col>
+
                     <Col span={6} push={4}>
-                    <Card
-                        hoverable
-                        style={{ width: 240 }}
-                        cover={<img alt="example" src="/imgs/m2.jpg" />}
-                    >
-                        <Meta title="Lunch"  />
-                    </Card>
+                        <Link to="/menus/Lunch" >
+                            <Card
+                                hoverable
+                                style={{ width: 240 }}
+                                cover={<img alt="example" src="/imgs/m2.jpg" />}
+                            >
+                                <Meta title="Lunch"  />
+                            </Card>
+                        </Link>
                     </Col>
+
                     <Col span={6} push={4}>
-                    <Card
-                        hoverable
-                        style={{ width: 240 }}
-                        cover={<img alt="example" src="/imgs/m3.jpg" />}
-                    >
-                        <Meta title="Dinner"  />
-                    </Card>
+                        <Link to="/menus/Dinner" >
+                            <Card
+                                hoverable
+                                style={{ width: 240 }}
+                                cover={<img alt="example" src="/imgs/m3.jpg" />}
+                            >
+                                <Meta title="Dinner"  />
+                            </Card>
+                        </Link>
                     </Col>
+
                 </Row>
 
                 <Row style={row}>

@@ -3,7 +3,7 @@ import Home from './features/home/Home';
 import './App.css';
 import Nav from '../src/features/home/Nav'
 import {BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import Menus from './features/menu/Menus';
+import MenuList from './features/menu/Menus';
 import About from './features/about/About';
 import Booking from './features/booking/Booking';
 import MenuItem from './features/menu/MenuItem';
@@ -18,10 +18,10 @@ function App() {
 
         <Switch>
             <Route exact path="/"><Home/></Route>
-            <Route exact path="/menu"><Menus/></Route>
+            <Route exact path="/menus/:category"><MenuList/></Route>
             <Route exact path="/menu/:id"><MenuItem/></Route>
-            <Route path="/booking"><Booking/></Route>
-            <Route path="/about"><About/></Route>
+            <Route exact path="/booking"><Booking/></Route>
+            <Route exact path="/about"><About/></Route>
         </Switch>
 
     </div>
