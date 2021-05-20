@@ -7,6 +7,13 @@ export const setMenus = (menus) => {
     }
 }
 
+export const getBookings = (bookings) => {
+    return {
+        type: ActionTypes.GET_BOOKINGS,
+        payload: bookings,
+    }
+}
+
 export const selectedMenu = (menu) => {
     return {
         type: ActionTypes.SELECTED_MENU,
