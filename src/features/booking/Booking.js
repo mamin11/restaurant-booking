@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import { DatePicker, Typography } from 'antd';
+import { DatePicker, Typography, Input, Form, Button } from 'antd';
 import moment from 'moment';
 import axios from 'axios'
 import {useSelector, useDispatch} from 'react-redux'
@@ -8,10 +8,8 @@ import {getBookings} from '../../app/actions/menuActions'
 const { RangePicker } = DatePicker;
 
 export default function Booking() {
-    // var DISABLED_HOURS = []
-    // var DISABLED_MINUTES = []
-    // var DISABLED_SECONDS = []
 
+    let DISABLED_HOURS_ON_SELECTED_DAY = []
     const bookings = useSelector(state => state.menus.bookings)
     const dispatch = useDispatch()
     
@@ -58,55 +56,89 @@ export default function Booking() {
         }, []);
     }
 
-    function disabledH() {
-        let DISABLED_HOURS= []
-        let HOURS = []
-        for (let index = 0; index < bookings.length; index++) {
-            DISABLED_HOURS.push(moment(bookings[index].start_time).format("HH"))
-            HOURS.push(range(moment(bookings[index].start_time).format("HH"), moment(bookings[index].end_time).format("HH")))
-        }
-        DISABLED_HOURS = DISABLED_HOURS.join(",")
-        console.log('HOURS ***', HOURS)
+    // function disabledH() {
+    //     let _ON_SELECTED_DAY= []
+    //     let HOURS = []
+    //     for (let index = 0; index < bookings.length; index++) {
+    //         DISABLED_HOURS.push(moment(bookings[index].start_time).format("HH"))
+    //         HOURS.push(range(moment(bookings[index].start_time).format("HH"), moment(bookings[index].end_time).format("HH")))
+    //     }
+    //     DISABLED_HOURS = DISABLED_HOURS.join(",")
+    //     // console.log('HOURS ***', HOURS)
         
-        //change from string array to int array - string array adds unexpected behaviour
-        var intArray = DISABLED_HOURS.split(',').map(function(item) {
-            return parseInt(item, 10);
-        });
+    //     //change from string array to int array - string array adds unexpected behaviour
+    //     var intArray = DISABLED_HOURS.split(',').map(function(item) {
+    //         return parseInt(item, 10);
+    //     });
 
-        var flattenedArray = flatten(HOURS)
-        var flattenedArrayInt = flattenedArray.slice(',').map(function(item) {
-            return parseInt(item, 10);
-        });
+    //     var flattenedArray = flatten(HOURS)
+    //     var flattenedArrayInt = flattenedArray.slice(',').map(function(item) {
+    //         return parseInt(item, 10);
+    //     });
 
-        console.log('flattenedArray---->', flattenedArrayInt)
+    //     // console.log('flattenedArray---->', flattenedArrayInt)
 
-        return flattenedArrayInt
-    }
-
-    // function disabledDateTime() {
-    //     return {
-    //     disabledHours: () => [1,2,3],
-    //     // disabledHours: () => [bookings.map(booking => moment(booking.start_time).format("H"))].toString(),
-    //     // disabledHours: () => disabledH(),
-    //     // disabledHours: () => [...moment(bookings.start_date).format("hh")],
-    //     // disabledHours: () => range(0, 24).splice(4, 20),
-    //     // disabledMinutes: () => range(30, 60),
-    //     // disabledSeconds: () => [55, 56],
-    //     };
+    //     return flattenedArrayInt
     // }
 
-    function onChange(date, dateString) {
-        console.log(date, dateString);
+    function getBookingOnSelectedDate(selectedDate = '') {
+        //inititalize array to store output
+        let BOOKINGS_ON_DAY = []
+        let HOURS = []
+        if(selectedDate !== '') {
+            //loop through the bookings
+            for (let index = 0; index < bookings.length; index++) {
+                //compare if date of item at index is similar to selected
+                // if((moment(bookings[index].start_time).format("YYYY-MM-DD")) == selectedDate){
+                if(moment(bookings[index].start_time).format("YYYY-MM-DD") ==selectedDate){
+                    //if similar, add to array 
+                    // console.log('similar check success *****')
+                    BOOKINGS_ON_DAY.push(moment(bookings[index].start_time).format("HH"))
+                    HOURS.push(range(moment(bookings[index].start_time).format("HH"), moment(bookings[index].end_time).format("HH")))
+                } 
+            }
+
+            BOOKINGS_ON_DAY = BOOKINGS_ON_DAY.join(",")
+
+            var flattenedArray = flatten(HOURS)
+            DISABLED_HOURS_ON_SELECTED_DAY = flattenedArray.slice(',').map(function(item) {
+                return parseInt(item, 10);
+            });
+
+            console.log('DISABLED_HOURS_ON_SELECTED_DAY', DISABLED_HOURS_ON_SELECTED_DAY)
+
+            return DISABLED_HOURS_ON_SELECTED_DAY
+        } else {
+            return []
+        }
+
     }
 
-    console.log('disabled hours',([bookings.map(booking => moment(booking.start_time).format("H"))].toString()))
+    function onChange(date, dateString) {
+        //set disabled hours for selected date
+        DISABLED_HOURS_ON_SELECTED_DAY = getBookingOnSelectedDate(dateString)
+
+        console.log(dateString);
+        // console.log(date, dateString);
+    }
+
+    // console.log('disabled hours',([bookings.map(booking => moment(booking.start_time).format("H"))].toString()))
 
     return (
         <div>
-            <Title style={title}>Pick the day and time</Title>
-            <DatePicker size={'large'} onChange={onChange} disabledDate={disabledDate} />
-            <RangePicker picker={'time'} format=" HH:mm" size={'large'} showTime disabledHours={disabledH} />
-            {/* <RangePicker picker={'time'} format="YYYY-MM-DD H:m" size={'large'} showTime disabledDate={disabledDate} disabledTime={disabledDateTime} /> */}
+            <Form >
+                <Title style={title}>Pick the day and time</Title>
+                <Form.Item wrapperCol={{span:5, push:9}}>
+                    <Input size={'large'} placeholder="Enter your email" style={{marginLeft:'20px'}} />
+                </Form.Item>
+                <DatePicker size={'large'} onChange={onChange} disabledDate={disabledDate} />
+                <RangePicker picker={'time'} format=" HH:mm" size={'large'} showTime disabledHours={() => {return DISABLED_HOURS_ON_SELECTED_DAY}} />
+                <Form.Item wrapperCol={{span:5, push:9}} style={{marginLeft:'30px'}} >
+                    <Button type="primary" htmlType="submit" style={{margin:'20px 0', float:'left'}}>
+                        Book
+                    </Button>
+                </Form.Item>
+            </Form>
         </div>
     )
 }
