@@ -17,7 +17,7 @@ export default function Booking() {
     
     const fetchBookings = async () => {
         const response = await axios
-        .get('http://127.0.0.1:8000/api/booking')
+        .get('https://restaurant-amin.herokuapp.com/api/booking')
         .catch((err) => {
             console.log(err)
         })
@@ -133,7 +133,7 @@ export default function Booking() {
             }
         )
 
-        axios.post('http://127.0.0.1:8000/api/booking', FormDataSubmit).catch((err) => {
+        axios.post('https://restaurant-amin.herokuapp.com/api/booking', FormDataSubmit).catch((err) => {
             console.log(err)
         })
     }

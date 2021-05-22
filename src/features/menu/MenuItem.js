@@ -15,7 +15,7 @@ const MenuItem = () => {
     
     const fetchMenuItem = async () => {
         const response = await axios
-        .get(`http://127.0.0.1:8000/api/menus/${id}`)
+        .get(`https://restaurant-amin.herokuapp.com/api/menus/${id}`)
         .catch((err) => {
             console.log(err)
         })
