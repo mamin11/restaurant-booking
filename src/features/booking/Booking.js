@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react'
-import { DatePicker, Typography, Input, Form, Button } from 'antd';
+import React, {useEffect, useState} from 'react'
+import { DatePicker, Typography, Input, Form, Button, Alert } from 'antd';
 import moment from 'moment';
 import axios from 'axios'
 import {useSelector, useDispatch} from 'react-redux'
@@ -10,6 +10,8 @@ const { RangePicker } = DatePicker;
 export default function Booking() {
 
     let DISABLED_HOURS_ON_SELECTED_DAY = []
+    let formData = []
+    let formRef = React.createRef(); //form reference, used to reference form when clearing fields after submission
     const bookings = useSelector(state => state.menus.bookings)
     const dispatch = useDispatch()
     
@@ -26,7 +28,7 @@ export default function Booking() {
         fetchBookings()
     }, [])
 
-    console.log(bookings)
+    // console.log(bookings)
 
 
     const {Title} = Typography;
@@ -92,28 +94,100 @@ export default function Booking() {
     function onChange(date, dateString) {
         //set disabled hours for selected date
         DISABLED_HOURS_ON_SELECTED_DAY = getBookingOnSelectedDate(dateString)
-
+        formData['date'] = dateString
         console.log(dateString);
         // console.log(date, dateString);
     }
 
+    function onChangeTime(time, timeString) {
+        formData['s_time'] = timeString[0]
+        formData['e_time'] = timeString[1]
+    }
+
     // console.log('disabled hours',([bookings.map(booking => moment(booking.start_time).format("H"))].toString()))
+
+    const onFinish = (values) => {
+        // console.log('Received values of form: ', values);
+        formData['email'] = values.email
+        formData['start_time'] = formData['date']+formData['s_time']
+        formData['end_time'] = formData['date']+formData['e_time']
+        if(formData != null) {
+            // console.log('form data: ', formData)
+            addBooking()
+
+            //clear form data
+            formRef.current.resetFields();
+            //show sucess message
+            setVisible(true);
+        }
+    };
+
+    function addBooking() {
+        const FormDataSubmit = new FormData();
+        FormDataSubmit.append("email", formData['email'])
+        FormDataSubmit.append("start_time", formData['start_time']) 
+        FormDataSubmit.append("end_time", formData['end_time']) 
+        FormDataSubmit.append(
+            "headers", {
+                "Content-Type": "multipart/form-data"
+            }
+        )
+
+        axios.post('http://127.0.0.1:8000/api/booking', FormDataSubmit).catch((err) => {
+            console.log(err)
+        })
+    }
+
+    //to handle sucess alert
+    const [visible, setVisible] = useState(false);
+
+    const handleClose = () => {
+        setVisible(false);
+    };
 
     return (
         <div>
-            <Form >
+            <Form 
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            ref={formRef}
+            >
                 <Title style={title}>Pick the day and time</Title>
-                <Form.Item wrapperCol={{span:5, push:9}}>
+                <Form.Item wrapperCol={{span:5, push:9}}
+                name="email" 
+                    rules={[
+                    {
+                        required: true,
+                        type: "email",
+                        message: "The input is not valid E-mail!"
+                    }
+                    ]}
+                >
                     <Input size={'large'} placeholder="Enter your email" style={{marginLeft:'20px'}} />
                 </Form.Item>
-                <DatePicker size={'large'} onChange={onChange} disabledDate={disabledDate} />
-                <RangePicker picker={'time'} format=" HH:mm" size={'large'} showTime disabledHours={() => {return DISABLED_HOURS_ON_SELECTED_DAY}} />
+
+                <Form.Item
+                rules={[
+                    {
+                        required: true,
+                        // type: "date",
+                        message: "The input is not valid!"
+                    }
+                    ]}
+                >
+                    <DatePicker size={'large'} onChange={onChange} disabledDate={disabledDate} />
+                <RangePicker picker={'time'} onChange={onChangeTime} format=" HH:mm" size={'large'} showTime disabledHours={() => {return DISABLED_HOURS_ON_SELECTED_DAY}} />
+                </Form.Item>
+                
                 <Form.Item wrapperCol={{span:5, push:9}} style={{marginLeft:'30px'}} >
                     <Button type="primary" htmlType="submit" style={{margin:'20px 0', float:'left'}}>
                         Book
                     </Button>
                 </Form.Item>
             </Form>
+            {visible ? (
+            <Alert message="Thank you. Your reservation has been created." type="success" closable  style={{width: '450px', margin: 'auto'}} afterClose={handleClose} />
+            ) : null}
         </div>
     )
 }
