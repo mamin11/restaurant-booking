@@ -42,7 +42,6 @@ const MenuList = () => {
                             cover={<img alt="example" src={menu.image} />}
                         >
                             <Meta title={menu.title}
-                            // description={menu.description}
                             />
                             <h3>£{menu.price}</h3>
                     </Card>
